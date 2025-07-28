@@ -1,0 +1,27 @@
+class Solution:
+    def prisonAfterNDays(self, arr: List[int], n: int) -> List[int]:
+        seen = dict()
+        cycle_found = False
+        for day in range(n):
+            prev=arr[:]
+            for i in range(1, len(arr) - 1):
+                if prev[i - 1] == prev[i + 1]:
+                    arr[i] = 1
+                else:
+                    arr[i] = 0
+            arr[0] = 0
+            arr[-1] = 0
+            state=tuple(arr)
+            print(arr)
+            if state in seen:
+                cycle_length = day - seen[state]
+                remaining = (n - day - 1) % cycle_length
+                cycle_found = True
+                break
+            else:
+                seen[state] = day
+
+        if cycle_found:
+            return self.prisonAfterNDays(arr, remaining)
+        else:
+            return arr
